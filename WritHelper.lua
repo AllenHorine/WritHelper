@@ -1,6 +1,14 @@
-WritHelper = {}
-local isCraft = false
+-----------------------------------------------------------------------------
+-- ESO Addon for displaying writ crafting requirements within the crafting
+-- screen. Each station shows it's respective writ quest items.
+--
+-- Author: Wheels
+-----------------------------------------------------------------------------
 
+WritHelper = {} -- WritHelper namespace
+
+-- All non-local variables declared
+WritHelper.isCraft = false
 WritHelper.name = "WritHelper"
 WritHelper.smithing = ""
 WritHelper.clothing = ""
@@ -16,11 +24,21 @@ WritHelper.hasProvisioning = false
 WritHelper.hasWoodworking = false
 WritHelper.objective = ""
 
+-----------------------------------------------------------------------------
+-- When user stops moving UI in game, save the location of it to the 
+-- savedVariables file. Every crafting station will have the UI in the same
+-- location.
+-----------------------------------------------------------------------------
 function WritHelper:OnIndicatorMoveStop()
   WritHelper.savedVariables.left = WritHelperCrafting:GetLeft()
   WritHelper.savedVariables.top = WritHelperCrafting:GetTop()
 end
 
+-----------------------------------------------------------------------------
+-- Restores the past position of the UI that was saved in the savedVariables
+-- file. This will restore upon loading the addon, and applies to all
+-- crafting stations.
+-----------------------------------------------------------------------------
 function WritHelper:RestorePosition()
   local left = self.savedVariables.left
   local top = self.savedVariables.top
@@ -28,6 +46,12 @@ function WritHelper:RestorePosition()
   WritHelperCrafting:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
  
+-----------------------------------------------------------------------------
+-- Called when the addon is loaded, and designates which events future
+-- functions will be waiting for. Additionally, it will get the saved
+-- variables that were stored in the last session and use them to restore
+-- the UI position.
+-----------------------------------------------------------------------------
 function WritHelper:Initialize()
   EVENT_MANAGER:RegisterForEvent(self.name, EVENT_CRAFTING_STATION_INTERACT, self.crafting)
   EVENT_MANAGER:RegisterForEvent(self.name, EVENT_END_CRAFTING_STATION_INTERACT, self.crafting)
@@ -40,6 +64,16 @@ function WritHelper:Initialize()
   self.RestorePosition()
 end
 
+-----------------------------------------------------------------------------
+-- Executes when a quest is added to the journal. Checks if the new quest is
+-- a writ quest, and if so it will then get the conditions for the writ, and
+-- save them for future use. It also sets a boolean saying if the user has
+-- a writ of given type to true.
+--
+-- @param index          The index in the journal where the new quest was 
+--                       added.
+-- @param name           The name of the new quest.
+-----------------------------------------------------------------------------
 function WritHelper:getWritQuest(index, name)
   local type = GetJournalQuestType(index)
   if type == 4 then
@@ -83,11 +117,31 @@ function WritHelper:getWritQuest(index, name)
   end
 end
 
+-----------------------------------------------------------------------------
+-- Executes when the conditions of a quest change. Updates what the current
+-- conditions to complete the writ are in real time as items are crafted.
+--
+-- @param index          The index in the journal where the quest with the
+--                       updated conditions is located.
+-- @param name           The name of the quest with the updated conditions
+-----------------------------------------------------------------------------
 function WritHelper:updateWrit(index, name)
   WritHelper:getWritQuest(index, name)
   WritHelper:updateCraft(GetCraftingInteractionType())
 end
 
+-----------------------------------------------------------------------------
+-- Executes when a writ is removed from the quest journal by the user, OR
+-- when the quest is completed by the user (called by endWrit()). If the
+-- removed quest matches the name of a writ quest, all data about that quest
+-- is removed and the boolean of whether the user has that crafting quest or
+-- not is set to false.
+--
+-- @param code           The code of the quest removed - unused.
+-- @param complete       Boolean if quest is completed - unused.
+-- @param index          Index in journal where removed quest was - unused.
+-- @param name           Name of the removed quest - used.
+-----------------------------------------------------------------------------
 function WritHelper:delWrit(code, completed, index, name)
   if name == 'Blacksmith Writ' then 
     WritHelperCraftingTitle:SetText(string.format(''))
@@ -122,10 +176,25 @@ function WritHelper:delWrit(code, completed, index, name)
   end
 end
 
+-----------------------------------------------------------------------------
+-- Executed when a writ is completed by turning in crafted items. Calls
+-- delWrit() with all params but name being nil as they are not used.
+--
+-- @param code           Code of the quest that was turned in - unused.
+-- @param name           Name of the quest that was completed - used.  
+-----------------------------------------------------------------------------
 function WritHelper:endWrit(code, name)
   WritHelper.delWrit(nil, nil, nil, name)
 end
 
+-----------------------------------------------------------------------------
+-- Executed by crating(). Updates text on UI with appropriate text for
+-- matching crafting station using data previously gathered about writ
+-- quests as they were picked up.
+--
+-- @param craftSkill     Code corresponding to the type of crafting station
+--                       that the user is interacting with.
+-----------------------------------------------------------------------------
 function WritHelper:updateCraft(craftSkill)
   if craftSkill == 1 and WritHelper.hasSmithing then
     WritHelperCraftingTitle:SetText(string.format('Blacksmith Writ'))
@@ -148,12 +217,21 @@ function WritHelper:updateCraft(craftSkill)
   end
 end
 
+-----------------------------------------------------------------------------
+-- Executed when the user interacts with or leaves a crafting station.
+-- Updates the UI with the appropriate writ information for that crafting
+-- station, as well as determining whether or not the UI should be displayed.
+--
+-- @param craftSkill     Code corresponding to the type of crafting station
+--                       that the user is interacting with.
+-----------------------------------------------------------------------------
 function WritHelper:crafting(craftSkill)
   WritHelper.updateCraft(craftSkill)
-  isCraft = not isCraft
-  WritHelperCrafting:SetHidden(not isCraft)
+  WritHelper.isCraft = not WritHelper.isCraft
+  WritHelperCrafting:SetHidden(not WritHelper.isCraft)
 end
 
+-- development code for loading quests on startup - IGNORE
 -- function WritHelper:initQuests()
 --   d(GetNumJournalQuests())
 --   for i = 1, GetNumJournalQuests(), 1 do
@@ -161,11 +239,18 @@ end
 --   end
 -- end
 
+-----------------------------------------------------------------------------
+-- Executes when an addon is loaded. Determines if the addon that was loaded
+-- was this addon, and if so it then executes the initialization function.
+--
+-- @param event          ??
+-- @param addonName      Name of the addon that was loaded.
 function WritHelper:OnAddOnLoaded(event, addonName)
   if addonName == WritHelper.name then
     WritHelper.Initialize()
-    -- zo_callLater(function()WritHelper.initQuests()end, 5000)
+    -- zo_callLater(function()WritHelper.initQuests()end, 5000) -- IGNORE
   end
 end
  
+-- Starts addon
 EVENT_MANAGER:RegisterForEvent(WritHelper.name, EVENT_ADD_ON_LOADED, WritHelper.OnAddOnLoaded)
