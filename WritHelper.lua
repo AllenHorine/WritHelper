@@ -231,7 +231,9 @@ function WritHelper:crafting(craftSkill)
   WritHelperCrafting:SetHidden(not WritHelper.isCraft)
 end
 
+-----------------------------------------------------------------------------
 -- development code for loading quests on startup - IGNORE
+-----------------------------------------------------------------------------
 -- function WritHelper:initQuests()
 --   d(GetNumJournalQuests())
 --   for i = 1, GetNumJournalQuests(), 1 do
