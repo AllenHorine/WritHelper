@@ -2,7 +2,8 @@
 -- ESO Addon for displaying writ crafting requirements within the crafting
 -- screen. Each station shows it's respective writ quest items.
 --
--- Author: Wheels
+-- Author:    Wheels
+-- Version:   0.6.24
 -----------------------------------------------------------------------------
 
 WritHelper = {}
