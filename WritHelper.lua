@@ -6,7 +6,6 @@
 -----------------------------------------------------------------------------
 
 WritHelper = {}
-local FA = WritHelper
 local isCraft = false
 
 WritHelper.name = "WritHelper"
