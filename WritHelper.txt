@@ -1,5 +1,6 @@
 ## Title: WritHelper
 ## Author: |c00dd00Wheels|r
+## Version: 0.6.24
 ## APIVersion: 100018
 ## SavedVariables: WritHelperSavedVariables
 
