@@ -3,7 +3,7 @@
 -- screen. Each station shows it's respective writ quest items.
 --
 -- Author:    Wheels
--- Version:   1.0.0
+-- Version:   1.0.1
 -----------------------------------------------------------------------------
 
 WritHelper = {}
@@ -55,7 +55,7 @@ end
 -----------------------------------------------------------------------------
 function WritHelper:Initialize()
   EVENT_MANAGER:RegisterForEvent(self.name, EVENT_CRAFTING_STATION_INTERACT, self.crafting)
-  EVENT_MANAGER:RegisterForEvent(self.name, EVENT_END_CRAFTING_STATION_INTERACT, self.crafting)
+  EVENT_MANAGER:RegisterForEvent(self.name, EVENT_END_CRAFTING_STATION_INTERACT, self.endCraft)
   EVENT_MANAGER:RegisterForEvent(self.name, EVENT_QUEST_ADDED, self.getWritQuest)
   EVENT_MANAGER:RegisterForEvent(self.name, EVENT_QUEST_COMPLETE, self.endWrit)
   EVENT_MANAGER:RegisterForEvent(self.name, EVENT_QUEST_REMOVED, self.delWrit)
@@ -219,17 +219,29 @@ function WritHelper:updateCraft(craftSkill)
 end
 
 -----------------------------------------------------------------------------
--- Executed when the user interacts with or leaves a crafting station.
+-- Executed when the user interacts with a crafting station.
 -- Updates the UI with the appropriate writ information for that crafting
--- station, as well as determining whether or not the UI should be displayed.
+-- station, as well as displaying the UI.
 --
 -- @param craftSkill     Code corresponding to the type of crafting station
 --                       that the user is interacting with.
 -----------------------------------------------------------------------------
 function WritHelper:crafting(craftSkill)
   WritHelper:updateCraft(craftSkill)
-  isCraft = not isCraft
-  WritHelperCrafting:SetHidden(not isCraft)
+  isCraft = true
+  WritHelperCrafting:SetHidden(false)
+end
+
+-----------------------------------------------------------------------------
+-- Executed when the userleaves a crafting station.
+-- Clears and hides the UI.
+--
+-----------------------------------------------------------------------------
+function WritHelper:endCraft()
+  WritHelperCraftingTitle:SetText(string.format(''))
+  WritHelperCraftingObjective:SetText(string.format(''))
+  isCraft = false
+  WritHelperCrafting:SetHidden(true)
 end
 
 -----------------------------------------------------------------------------
