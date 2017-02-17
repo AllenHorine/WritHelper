@@ -2,7 +2,8 @@
 -- ESO Addon for displaying writ crafting requirements within the crafting
 -- screen. Each station shows it's respective writ quest items.
 --
--- Author: Wheels
+-- Author:    Wheels
+-- Version:   0.6.24
 -----------------------------------------------------------------------------
 
 WritHelper = {}
@@ -75,47 +76,46 @@ end
 -- @param name           The name of the new quest.
 -----------------------------------------------------------------------------
 function WritHelper:getWritQuest(index, name)
-	local type = GetJournalQuestType(index)
-	if type == 4 then
-		local p1, p2, p3, p4 = ''
-		p1 = GetJournalQuestConditionInfo(index, 1, 1)
-		p2 = GetJournalQuestConditionInfo(index, 1, 2)
-		p3 = GetJournalQuestConditionInfo(index, 1, 3)
-		p4 = GetJournalQuestConditionInfo(index, 1, 4)
-		if p1 ~= '' then
-		 WritHelper.objective = WritHelper.objective .. p1 .. '\n'
-		end
-		if p2 ~= '' then
-		 WritHelper.objective = WritHelper.objective .. p2 .. '\n'
-		end
-		if p3 ~= '' then
-		 WritHelper.objective = WritHelper.objective .. p3 .. '\n'
-		end
-		if p4 ~= '' then
-		 WritHelper.objective = WritHelper.objective .. p4
-		end
-		if name == 'Blacksmith Writ' then 
-			WritHelper.smithing = WritHelper.objective
-			WritHelper.hasSmithing = true
-		elseif name == 'Clothier Writ' then
-			WritHelper.clothing = WritHelper.objective
-			WritHelper.hasClothing = true
-		elseif name == 'Enchanter Writ' then
-			WritHelper.enchanting = WritHelper.objective
-			WritHelper.hasEnchanting = true
-		elseif name == 'Alchemist Writ' then
-			WritHelper.alchemy = WritHelper.objective
-			WritHelper.hasAlchemy = true
-		elseif name == 'Provisioner Writ' then
-			WritHelper.provisioning = WritHelper.objective
-			WritHelper.hasProvisioning = true
-		elseif name == 'Woodworker Writ' then
-			WritHelper.woodworking = WritHelper.objective
-			WritHelper.hasWoodworking = true
-		end
-		WritHelper.objective = ''
-	end
-	
+  local type = GetJournalQuestType(index)
+  if type == 4 then
+    local p1, p2, p3, p4 = ''
+    p1 = GetJournalQuestConditionInfo(index, 1, 1)
+    p2 = GetJournalQuestConditionInfo(index, 1, 2)
+    p3 = GetJournalQuestConditionInfo(index, 1, 3)
+    p4 = GetJournalQuestConditionInfo(index, 1, 4)
+    if p1 ~= '' then
+      WritHelper.objective = WritHelper.objective .. p1 .. '\n'
+    end
+    if p2 ~= '' then
+      WritHelper.objective = WritHelper.objective .. p2 .. '\n'
+    end
+    if p3 ~= '' then
+      WritHelper.objective = WritHelper.objective .. p3 .. '\n'
+    end
+    if p4 ~= '' then
+      WritHelper.objective = WritHelper.objective .. p4
+    end
+    if name == 'Blacksmith Writ' then 
+      WritHelper.smithing = WritHelper.objective
+      WritHelper.hasSmithing = true
+    elseif name == 'Clothier Writ' then
+      WritHelper.clothing = WritHelper.objective
+      WritHelper.hasClothing = true
+    elseif name == 'Enchanter Writ' then
+      WritHelper.enchanting = WritHelper.objective
+      WritHelper.hasEnchanting = true
+    elseif name == 'Alchemist Writ' then
+      WritHelper.alchemy = WritHelper.objective
+      WritHelper.hasAlchemy = true
+    elseif name == 'Provisioner Writ' then
+      WritHelper.provisioning = WritHelper.objective
+      WritHelper.hasProvisioning = true
+    elseif name == 'Woodworker Writ' then
+      WritHelper.woodworking = WritHelper.objective
+      WritHelper.hasWoodworking = true
+    end
+      WritHelper.objective = ''
+  end
 end
 
 -----------------------------------------------------------------------------
@@ -127,9 +127,8 @@ end
 -- @param name           The name of the quest with the updated conditions
 -----------------------------------------------------------------------------
 function WritHelper:updateWrit(index, name)
-	WritHelper:getWritQuest(index, name)
-	WritHelper:updateCraft(GetCraftingInteractionType())
-
+  WritHelper:getWritQuest(index, name)
+  WritHelper:updateCraft(GetCraftingInteractionType())
 end
 
 -----------------------------------------------------------------------------
@@ -145,37 +144,37 @@ end
 -- @param name           Name of the removed quest - used.
 -----------------------------------------------------------------------------
 function WritHelper.delWrit(code, completed, index, name)
-	if name == 'Blacksmith Writ' then 
-		WritHelperCraftingTitle:SetText(string.format(''))
-		WritHelperCraftingObjective:SetText(string.format(''))
-		WritHelper.smithing = ''
-		WritHelper.hasSmithing = false
-	elseif name == 'Clothier Writ' then
-		WritHelperCraftingTitle:SetText(string.format(''))
-		WritHelperCraftingObjective:SetText(string.format(''))
-		WritHelper.clothing = ''
-		WritHelper.hasClothing = false
-	elseif name == 'Enchanter Writ' then
-		WritHelperCraftingTitle:SetText(string.format(''))
-		WritHelperCraftingObjective:SetText(string.format(''))
-		WritHelper.enchanting = ''
-		WritHelper.hasEnchanting = false
-	elseif name == 'Alchemist Writ' then
-		WritHelperCraftingTitle:SetText(string.format(''))
-		WritHelperCraftingObjective:SetText(string.format(''))
-		WritHelper.alchemy = ''
-		WritHelper.hasAlchemy = false
-	elseif name == 'Provisioner Writ' then
-		WritHelperCraftingTitle:SetText(string.format(''))
-		WritHelperCraftingObjective:SetText(string.format(''))
-		WritHelper.provisioning = ''
-		WritHelper.hasProvisioning = false
-	elseif name == 'Woodworker Writ' then
-		WritHelperCraftingTitle:SetText(string.format(''))
-		WritHelperCraftingObjective:SetText(string.format(''))
-		WritHelper.woodworking = ''
-		WritHelper.hasWoodworking = false
-	end
+  if name == 'Blacksmith Writ' then 
+    WritHelperCraftingTitle:SetText(string.format(''))
+    WritHelperCraftingObjective:SetText(string.format(''))
+    WritHelper.smithing = ''
+    WritHelper.hasSmithing = false
+  elseif name == 'Clothier Writ' then
+    WritHelperCraftingTitle:SetText(string.format(''))
+    WritHelperCraftingObjective:SetText(string.format(''))
+    WritHelper.clothing = ''
+    WritHelper.hasClothing = false
+  elseif name == 'Enchanter Writ' then
+    WritHelperCraftingTitle:SetText(string.format(''))
+    WritHelperCraftingObjective:SetText(string.format(''))
+    WritHelper.enchanting = ''
+    WritHelper.hasEnchanting = false
+  elseif name == 'Alchemist Writ' then
+    WritHelperCraftingTitle:SetText(string.format(''))
+    WritHelperCraftingObjective:SetText(string.format(''))
+    WritHelper.alchemy = ''
+    WritHelper.hasAlchemy = false
+  elseif name == 'Provisioner Writ' then
+    WritHelperCraftingTitle:SetText(string.format(''))
+    WritHelperCraftingObjective:SetText(string.format(''))
+    WritHelper.provisioning = ''
+    WritHelper.hasProvisioning = false
+  elseif name == 'Woodworker Writ' then
+    WritHelperCraftingTitle:SetText(string.format(''))
+    WritHelperCraftingObjective:SetText(string.format(''))
+    WritHelper.woodworking = ''
+    WritHelper.hasWoodworking = false
+  end
 end
 
 -----------------------------------------------------------------------------
@@ -186,7 +185,7 @@ end
 -- @param name           Name of the quest that was completed - used.  
 -----------------------------------------------------------------------------
 function WritHelper.endWrit(code, name)
-	WritHelper.delWrit(nil, nil, nil, name)
+  WritHelper.delWrit(nil, nil, nil, name)
 end
 
 -----------------------------------------------------------------------------
@@ -198,25 +197,25 @@ end
 --                       that the user is interacting with.
 -----------------------------------------------------------------------------
 function WritHelper:updateCraft(craftSkill)
-	if craftSkill == 1 and WritHelper.hasSmithing then
-		WritHelperCraftingTitle:SetText(string.format('Blacksmith Writ'))
-		WritHelperCraftingObjective:SetText(string.format(WritHelper.smithing))
-	elseif craftSkill == 2 and WritHelper.hasClothing then
-		WritHelperCraftingTitle:SetText(string.format('Clothier Writ'))
-		WritHelperCraftingObjective:SetText(string.format(WritHelper.clothing))
-	elseif craftSkill == 3 and WritHelper.hasEnchanting then
-		WritHelperCraftingTitle:SetText(string.format('Enchanter Writ'))
-		WritHelperCraftingObjective:SetText(string.format(WritHelper.enchanting))
-	elseif craftSkill == 4 and WritHelper.hasAlchemy then
-		WritHelperCraftingTitle:SetText(string.format('Alchemist Writ'))
-		WritHelperCraftingObjective:SetText(string.format(WritHelper.alchemy))
-	elseif craftSkill == 5 and WritHelper.hasProvisioning then
-		WritHelperCraftingTitle:SetText(string.format('Provisioner Writ'))
-		WritHelperCraftingObjective:SetText(string.format(WritHelper.provisioning))
-	elseif craftSkill == 6 and WritHelper.hasWoodworking then
-		WritHelperCraftingTitle:SetText(string.format('Woodworker Writ'))
-		WritHelperCraftingObjective:SetText(string.format(WritHelper.woodworking))
-	end
+  if craftSkill == 1 and WritHelper.hasSmithing then
+    WritHelperCraftingTitle:SetText(string.format('Blacksmith Writ'))
+    WritHelperCraftingObjective:SetText(string.format(WritHelper.smithing))
+  elseif craftSkill == 2 and WritHelper.hasClothing then
+    WritHelperCraftingTitle:SetText(string.format('Clothier Writ'))
+    WritHelperCraftingObjective:SetText(string.format(WritHelper.clothing))
+  elseif craftSkill == 3 and WritHelper.hasEnchanting then
+    WritHelperCraftingTitle:SetText(string.format('Enchanter Writ'))
+    WritHelperCraftingObjective:SetText(string.format(WritHelper.enchanting))
+  elseif craftSkill == 4 and WritHelper.hasAlchemy then
+    WritHelperCraftingTitle:SetText(string.format('Alchemist Writ'))
+    WritHelperCraftingObjective:SetText(string.format(WritHelper.alchemy))
+  elseif craftSkill == 5 and WritHelper.hasProvisioning then
+    WritHelperCraftingTitle:SetText(string.format('Provisioner Writ'))
+    WritHelperCraftingObjective:SetText(string.format(WritHelper.provisioning))
+  elseif craftSkill == 6 and WritHelper.hasWoodworking then
+    WritHelperCraftingTitle:SetText(string.format('Woodworker Writ'))
+    WritHelperCraftingObjective:SetText(string.format(WritHelper.woodworking))
+  end
 end
 
 -----------------------------------------------------------------------------
@@ -228,9 +227,9 @@ end
 --                       that the user is interacting with.
 -----------------------------------------------------------------------------
 function WritHelper:crafting(craftSkill)
-	WritHelper:updateCraft(craftSkill)
-	isCraft = not isCraft
-	WritHelperCrafting:SetHidden(not isCraft)
+  WritHelper:updateCraft(craftSkill)
+  isCraft = not isCraft
+  WritHelperCrafting:SetHidden(not isCraft)
 end
 
 -----------------------------------------------------------------------------
@@ -253,7 +252,7 @@ end
 function WritHelper.OnAddOnLoaded(event, addonName)
   if addonName == WritHelper.name then
     WritHelper:Initialize()
-	-- zo_callLater(function()WritHelper:initQuests()end, 5000) --IGNORE
+    -- zo_callLater(function()WritHelper:initQuests()end, 5000) --IGNORE
   end
 end
  
